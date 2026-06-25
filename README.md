@@ -12,6 +12,34 @@ Microcontroller with four HC-SR04 ultrasonic sensors, an OLED display, and a ser
 Key outcomes include sub-2-second slot detection latency, 99%+ sensor accuracy at distances up to 400 cm. The solution demonstrates practical application of embedded systems, IoT protocols, cloud computing, and software engineering principles within a single integrated platform.
 
 ---
+##Wiring Diagram
+
+                                 +5V Rail
+         ┌──────────────────┬──────────────────┬──────────────────┐
+         │                  │                  │                  │
+    ┌────┴────┐        ┌────┴────┐        ┌────┴────┐        ┌────┴────┐
+    │ HC-SR04 │        │ HC-SR04 │        │ HC-SR04 │        │ HC-SR04 │
+    │  Slot1  │        │  Slot2  │        │  Slot3  │        │  Slot4  │
+    └─┬─────┬─┘        └─┬─────┬─┘        └─┬─────┬─┘        └─┬─────┬─┘
+      │TRIG │ECHO        │TRIG │ECHO        │TRIG │ECHO        │TRIG │ECHO
+    GPIO5 GPIO4        GPIO18 GPIO2       GPIO19 GPIO15      GPIO23 GPIO27
+      │     │             │     │           │     │            │     │
+      └─────┴─────────────┴─────┴───────┬───┴─────┴────────────┴─────┘
+                                        │
+                               ┌────────┴──────────┐
+                               │       ESP32       │
+                               │ (Main Controller) │
+                               └───┬──────────┬────┘
+                            SDA/SCL│          │PWM
+                              GPIO21/22       GPIO13
+                                   ▼          ▼
+                           ┌──────────────┐ ┌──────────┐
+                           │ SSD1306 OLED │ │  Servo   │
+                           │   Display    │ │  Motor   │
+                           └──────────────┘ └──────────┘
+Schematic interconnection of sensors, OLED, and servo to the ESP32.
+
+---
 
 ## Features
 
@@ -28,7 +56,7 @@ Key outcomes include sub-2-second slot detection latency, 99%+ sensor accuracy a
 ## System Architecture
 
 ```text
-┌─────────────────┐
+                     ┌─────────────────┐
                      │   System Boot   │
                      └────────┬────────┘
                               ▼
@@ -145,7 +173,7 @@ https://ahmad7123.github.io/smart-car-parking-portfolio.html/
 
 ## Author
 
-Ahmad Nawaz| Kanza Sohail 
+Ahmad Nawaz | Kanza Sohail 
 
 
 Electronic & Computing Engineering Student
