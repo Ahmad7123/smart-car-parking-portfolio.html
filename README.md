@@ -1,2 +1,126 @@
-# smart-car-parking-portfolio.html
-Smart Car Parking System with Internet of Thinking 
+# Smart Car Parking System using IoT
+
+![ESP32](https://img.shields.io/badge/ESP32-IoT-blue)
+![Arduino](https://img.shields.io/badge/Arduino-C++-green)
+![MQTT](https://img.shields.io/badge/MQTT-Enabled-orange)
+
+## Overview
+
+
+The Smart Car Parking System, an Internet of Things (IoT). The system addresses the growing urban challenge of inefficient parking space management through real-time automated monitoring and cloud-based data analytics.
+Microcontroller with four HC-SR04 ultrasonic sensors, an OLED display, and a servo motor to create a fully automated parking management solution. Vehicle detection occurs with occupancy data transmitted securely to AWS using the MQTT over Wi-Fi connectivity.
+Key outcomes include sub-2-second slot detection latency, 99%+ sensor accuracy at distances up to 400 cm. The solution demonstrates practical application of embedded systems, IoT protocols, cloud computing, and software engineering principles within a single integrated platform.
+
+---
+
+## Features
+
+- Real-time parking monitoring
+- Automatic gate control
+- ESP32-based controller
+- OLED display interface
+- MQTT cloud communication
+- Mobile dashboard monitoring
+- Slot availability detection
+
+---
+
+## System Architecture
+
+```text
++----------------------+
+| Ultrasonic Sensors   |
++----------+-----------+
+           |
+           v
++----------------------+
+| ESP32 Controller     |
++----------+-----------+
+           |
+    +------+------+ 
+    |             |
+    v             v
+OLED Display   Servo Motor
+(Local UI)     (Gate Control)
+
+           |
+           v
+        Wi-Fi
+           |
+           v
+      MQTT Broker
+           |
+           v
+   Mobile Dashboard
+```
+
+## Hardware Components
+
+| Component | Quantity |
+|------------|------------|
+| ESP32 | 1 |
+| Ultrasonic Sensor | 2 |
+| Servo Motor | 1 |
+| OLED Display | 1 |
+| Breadboard | 1 |
+| Jumper Wires | Several |
+
+---
+
+## Software Requirements
+
+- Arduino IDE
+- ESP32 Board Package
+- MQTT Broker
+- GitHub Pages
+
+---
+
+## Installation
+
+### 1. Clone Repository
+
+```bash
+git clone https://github.com/Ahmad7123/smart-car-parking-portfolio.html.git
+```
+
+### 2. Install Libraries
+
+- WiFi.h
+- PubSubClient.h
+- Adafruit SSD1306
+- Adafruit GFX
+
+### 3. Upload Code
+
+Open Arduino IDE and upload the code to ESP32.
+
+---
+
+## Project Website
+
+https://ahmad7123.github.io/smart-car-parking-portfolio.html/
+
+---
+
+## Author
+
+Ahmad Nawaz| Kanza Sohail 
+
+
+Electronic & Computing Engineering Student
+
+Skills:
+- C++
+- Arduino
+- ESP32
+- IoT Systems
+- Embedded Systems
+- MQTT
+- Web Development
+
+---
+
+## License
+
+This project is for educational and research purposes.
