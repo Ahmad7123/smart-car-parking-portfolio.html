@@ -28,30 +28,70 @@ Key outcomes include sub-2-second slot detection latency, 99%+ sensor accuracy a
 ## System Architecture
 
 ```text
-+----------------------+
-| Ultrasonic Sensors   |
-+----------+-----------+
-           |
-           v
-+----------------------+
-| ESP32 Controller     |
-+----------+-----------+
-           |
-    +------+------+ 
-    |             |
-    v             v
-OLED Display   Servo Motor
-(Local UI)     (Gate Control)
+┌─────────────────┐
+                     │   System Boot   │
+                     └────────┬────────┘
+                              ▼
+                 ┌──────────────────────────┐
+                 │ Initialize Wi-Fi, MQTT,  │
+                 │ OLED, Servo, GPIO pins   │
+                 └────────────┬─────────────┘
+                              ▼
+                 ┌──────────────────────────┐
+                 │ Connect to AWS IoT Core  │
+                 │ (TLS Mutual Auth)        │
+                 └────────────┬─────────────┘
+                              ▼
+                      ┌──────────────────┐
+                ┌────▶│    MAIN LOOP     │◀────────────────┐
+                │     └────────┬─────────┘                  │
+                │              ▼                            │
+                │   ┌──────────────────────┐                │
+                │   │ Read all 4 ultrasonic│                │
+                │   │ sensors (distance)   │                │
+                │   └──────────┬───────────┘                │
+                │              ▼                            │
+                │   ┌──────────────────────┐                │
+                │   │ Classify each slot:  │                │
+                │   │ distance < 10 cm?    │                │
+                │   │ YES → Occupied       │                │
+                │   │ NO → Available       │                │
+                │   └──────────┬───────────┘                │
+                │              ▼                            │
+                │   ┌──────────────────────┐                │
+                │   │ Compute Available =  │                │
+                │   │ TOTAL_SLOTS-Occupied │                │
+                │   └──────────┬───────────┘                │
+                │              ▼                            │
+                │      ┌──────────────-─┐                   │
+                │      │ Available == 0?│                   │
+                │      └───┬───────┬──-─┘                   │
+                │       YES│       │NO                      │
+                │          ▼       ▼                        │
+                │  ┌────────────┐ ┌────────────────-┐       │
+                │  │ OLED shows │ │ OLED shows      │       │
+                │  │"PARKING    │ │ available slot  │       │
+                │  │  FULL"     │ │ count           │       │
+                │  └─────┬──────┘ └────────┬────────┘       │
+                │        ▼                 ▼                │
+                │  ┌────────────┐  ┌────────────────-┐      │
+                │  │ Gate stays │  │ Servo opens gate│      │
+                │  │ CLOSED     │  │ automatically   │      │
+                │  └─────┬──────┘  └────────┬──────-─┘      │
+                │        └──────────┬───────┘               │
+                │                   ▼                       │
+                │       ┌───────────────────────-──┐        │
+                │       │ Build JSON payload &     │        │
+                │       │ Publish via MQTT to      │        │
+                │       │ AWS IoT Core             │        │
+                │       └────────────┬─────────────┘        │
+                │                    ▼                      │
+                │       ┌──────────────────────--───┐       │
+                │       │ Delay (poll interval)     │       │
+                │       └────────────┬───────────-──┘       │
+                └────────────────────┴──────────────────────┘
 
-           |
-           v
-        Wi-Fi
-           |
-           v
-      MQTT Broker
-           |
-           v
-   Mobile Dashboard
+Main control-flow logic executed on every loop () iteration.
 ```
 
 ## Hardware Components
